@@ -11,16 +11,13 @@ if ! xauth list | grep -q "$(hostname --short)/unix:0"; then
 fi
 
 xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
-xhost local:root
 
-docker run -it \
-        --volume=$XSOCK:$XSOCK:rw \
-        --volume=$XAUTH:$XAUTH:rw \
+docker run -it --rm \
+        --name=webex \
+        --volume=$XSOCK:$XSOCK:rw,Z \
+        --volume=$XAUTH:$XAUTH:rw,Z \
         --env="XAUTHORITY=${XAUTH}" \
         --env="DISPLAY=$DISPLAY" \
         --user="webex" \
-        --name=webex \
-        --privileged \
-        --net=host \
-        --rm \
+        --security-opt label=type:container_runtime_t \
         webex
