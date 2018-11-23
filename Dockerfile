@@ -1,6 +1,10 @@
 FROM ubuntu:vivid
 MAINTAINER Natale Vinto <ebballon@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
+
+# https://github.com/docker-library/official-images/issues/1902
+RUN sed -i 's/archive/old-releases/' /etc/apt/sources.list
+
 RUN dpkg --add-architecture i386 
 RUN apt-get update
 RUN apt-get install -y firefox:i386 icedtea-7-plugin:i386 \
